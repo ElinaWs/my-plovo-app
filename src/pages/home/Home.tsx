@@ -43,6 +43,7 @@ export const Home = () => {
             Dishes list:
         </Typography>
     <div className={styles.wrapper}>
+      
     {
         dishes.map((dishItem) => (
                 <DishCard dish = {dishItem} key = {dishItem.id} />
