@@ -2,24 +2,27 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import { axiosApi } from "../../axios";
-import type { IDish, IDishList } from "../../types";
+import type { IDish, IDishList, IDishShort } from "../../types";
 
 export const Dish = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [dish, setDish] = useState<IDish | null>(null);
+  const [dish, setDish] = useState<IDishShort | null>(null);
+
+  const goToEditDish = () => {
+        navigate(`/dish/edit/${id}`)
+  }
 
   useEffect(() => {
     const fetchDish = async () => {
       if (!id) return;
       try {
-        const response = await axiosApi.get<IDishList | null>("/dishes.json");
+        const response = await axiosApi.get<IDishShort | null>(`/dishes/${id}.json`);
         const data = response.data;
-        if (!data || !data[id]) {
-          setDish(null);
+        if (!data) {
           return;
         }
-        setDish({ ...data[id], id });
+        setDish(data);
       } catch (error) {
         console.error("Error fetching dish:", error);
         setDish(null);
@@ -37,6 +40,7 @@ export const Dish = () => {
       navigate("/"); 
     }
   };
+  
 
   if (!dish) {
     return <Typography variant="h6">Dish is not definded!</Typography>;
@@ -54,6 +58,7 @@ export const Dish = () => {
         <Typography variant="h6" gutterBottom>
           Цена: {dish.price} $
         </Typography>
+        <Button onClick={goToEditDish}>Edit</Button>
 
         <Button variant="outlined" color="error" onClick={handleDelete}>
           Delete

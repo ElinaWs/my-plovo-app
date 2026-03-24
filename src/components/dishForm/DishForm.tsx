@@ -1,7 +1,7 @@
 import styles from './styles.module.css'
 import { Button, TextField } from '@mui/material';
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
-import type { IDishShort } from '../../types';
+import type { IDish, IDishShort } from '../../types';
 
 const INITIAL_FORM_STATE: IDishShort = {
   name: '',
@@ -12,10 +12,11 @@ const INITIAL_FORM_STATE: IDishShort = {
 interface Props {
     onSubmit: (dish: IDishShort) => void
     loading: boolean
+    dish?: IDishShort 
 };
 
-const DishForm = ({onSubmit, loading}: Props) => {
-  const [formState, setFormState] = useState<IDishShort>(INITIAL_FORM_STATE)
+const DishForm = ({onSubmit, loading, dish}: Props) => {
+  const [formState, setFormState] = useState<IDishShort>(dish || INITIAL_FORM_STATE)
 
   const inputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
@@ -49,11 +50,13 @@ const DishForm = ({onSubmit, loading}: Props) => {
         type={'number'}
         onChange={inputChangeHandler}
       />
-      <Button loading={loading} 
+      <Button 
+        loading={loading} 
         type={'submit'} 
-        variant={'contained'}>
-            Add Dish
-        </Button>
+        variant={'contained'}
+      >
+        {dish ? 'Edit Dish' : 'Add Dish'}
+      </Button>
     </form>
   );
 };
